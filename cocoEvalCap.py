@@ -8,18 +8,21 @@ from pycocoevalcap.eval import COCOEvalCap
 import matplotlib.pyplot as plt
 import skimage.io as io
 import pylab
+import sys
 pylab.rcParams['figure.figsize'] = (10.0, 8.0)
 
 import json
 from json import encoder
 encoder.FLOAT_REPR = lambda o: format(o, '.3f')
 
+if len(sys.argv)<2:
+    print 'usage: <val2014 or test2014>'
+    exit()
 
-# In[2]:
 
 # set up file names and pathes
 dataDir='.'
-dataType='val2014'
+dataType=sys.argv[1]
 algName = 'soft'
 annFile='%s/../captions_val2014.json'%(dataDir)
 subtypes=['results', 'evalImgs', 'eval']
@@ -71,26 +74,6 @@ for i in xrange(5):
     annIds = cocoRes.getAnnIds(imgIds=imgId)
     anns = cocoRes.loadAnns(annIds)
     coco.showAnns(anns)
-
-
-"""
-img = coco.loadImgs(imgId)[0]
-I = io.imread('%s/../val2014/%s'%(dataDir,img['file_name']))
-plt.imshow(I)
-plt.axis('off')
-plt.show()
-
-
-# In[7]:
-
-# plot score histogram
-ciderScores = [eva['CIDEr'] for eva in cocoEval.evalImgs]
-plt.hist(ciderScores)
-plt.title('Histogram of CIDEr Scores', fontsize=20)
-plt.xlabel('CIDEr score', fontsize=20)
-plt.ylabel('result counts', fontsize=20)
-plt.show()
-"""
 
 # In[8]:
 
