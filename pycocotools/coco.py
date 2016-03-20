@@ -69,6 +69,7 @@ class COCO:
         self.cats = []
         if not annotation_file == None:
             print 'loading annotations into memory...'
+            print annotation_file
             time_t = datetime.datetime.utcnow()
             dataset = json.load(open(annotation_file, 'r'))
             print datetime.datetime.utcnow() - time_t
@@ -90,13 +91,16 @@ class COCO:
 
         cats = []
         catToImgs = []
-        if self.dataset['type'] == 'instances':
-            cats = {cat['id']: [] for cat in self.dataset['categories']}
-            for cat in self.dataset['categories']:
-                cats[cat['id']] = cat
-            catToImgs = {cat['id']: [] for cat in self.dataset['categories']}
-            for ann in self.dataset['annotations']:
-                catToImgs[ann['category_id']] += [ann['image_id']]
+        if 'type' in self.dataset:
+            if self.dataset['type'] == 'instances':
+                cats = {cat['id']: [] for cat in self.dataset['categories']}
+                for cat in self.dataset['categories']:
+                    cats[cat['id']] = cat
+                catToImgs = {cat['id']: [] for cat in self.dataset['categories']}
+                for ann in self.dataset['annotations']:
+                    catToImgs[ann['category_id']] += [ann['image_id']]
+        else:
+            self.dataset['type'] = 'captions'
 
         print 'index created!'
 
